@@ -2,15 +2,13 @@ import React from 'react';
 import { View, Text, TouchableOpacity, StyleSheet } from 'react-native';
 import { useContext } from 'react';
 import { AppContext } from '../context/AppContext';
-
-
-export default function AdminHome() {
+export default function StudentHome() {
     const { logout } = useContext(AppContext);
 
  return (
  <View style={styles.container}>
- <Text style={styles.title}>Área do Administrador</Text>
- <Text style={styles.subtitle}>Controle de Tickets</Text>
+ <Text style={styles.title}>Área do Aluno</Text>
+ <Text style={styles.subtitle}>Bem-vindo, Estudante!</Text>
  {/* Botão customizado */}
  <TouchableOpacity
  style={styles.button}
@@ -27,21 +25,21 @@ const styles = StyleSheet.create({
  flex: 1,
  justifyContent: 'center',
  alignItems: 'center',
- backgroundColor: '#ffebee',
+ backgroundColor: '#e0f7fa',
  },
  title: {
  fontSize: 24,
  fontWeight: 'bold',
- color: '#b71c1c',
+ color: '#006064',
  marginBottom: 8,
  },
  subtitle: {
  fontSize: 16,
- color: '#c62828',
+ color: '#00838f',
  marginBottom: 30,
  },
  button: {
- backgroundColor: '#d32f2f',
+ backgroundColor: '#0097a7',
  paddingVertical: 12,
  paddingHorizontal: 30,
  borderRadius: 8,
