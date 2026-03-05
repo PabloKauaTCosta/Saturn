@@ -1,39 +1,35 @@
 import React, { createContext, useState, useEffect } from 'react';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { loginRequest } from '../services/api';
+import { User } from '../models/User';
 export const AppContext = createContext();
 export const AppProvider = ({ children }) => {
-// ESTADO 1: USER (Memória RAM)
-// Guarda os dados do usuário enquanto o App está aberto. Se fechar, perde.
-const [user, setUser] = useState(null);
-// ESTADO 2: LOADING GLOBAL (Controle de Interface)
-// Começa como 'true' para segurar a tela de Splash enquanto checamos o armazenamento.
-const [loadingGlobal, setLoadingGlobal] = useState(true);
-// =================================================================
-// 1. PERSISTÊNCIA DE DADOS (Auto-Login)
-// =================================================================
-// Este useEffect roda apenas UMA vez, assim que o App abre.
-// Objetivo: Verificar se o usuário já fez login anteriormente.
-useEffect(() => {
-async function loadStorageData() {
-try {
-// Busca no "HD" do celular se existe um usuário salvo
-const storadUser = await AsyncStorage.getItem('@ticket:user');
-if (storadUser) {
-// Se achou, converte de Texto (JSON) para Objeto JavaScript
-// e joga para o Estado (RAM), logando o usuário automaticamente.
-setUser(JSON.parse(storadUser));
-}
-} catch (error) {
-console.log('Erro ao recuperar dados do storage:', error);
-} finally {
-// INDEPENDENTE de achar o usuário ou dar erro,
-// avisamos o App que o carregamento terminou para liberar a tela.
-setLoadingGlobal(false);
-}
-}
-loadStorageData();
-}, []);
+    const [user, setUser] = useState(null);
+    const [loadingGlobal, setLoadingGlobal] = useState(true);
+    // =================================================================
+    // 1. PERSISTÊNCIA DE DADOS (Auto-Login com Re-hidratação)
+    // =================================================================
+    useEffect(() => {
+    async function loadStorageData() {
+    try {
+    const storadUser = await AsyncStorage.getItem('@ticket:user');
+    if (storadUser) {
+    // PASSO A: Converte de Texto para Objeto Simples (JSON Burro)
+    const parsedJson = JSON.parse(storadUser);
+    // PASSO B: A RE-HIDRATAÇÃO
+    // O JSON recuperado não tem as funções (.isAdmin, etc).
+    // Precisamos passar ele pelo new User() para devolver a "inteligência".
+    const userInstance = new User(parsedJson);
+    setUser(userInstance);
+    }
+    } catch (error) {
+    console.log('Erro ao recuperar dados do storage:', error);
+    } finally {
+    setLoadingGlobal(false);
+    }
+    }
+    loadStorageData();
+    }, []);
 // Restante do código continua o mesmo=================================================================
 // 2. FUNÇÃO DE LOGIN (Com Blindagem de Erro)
 // =================================================================

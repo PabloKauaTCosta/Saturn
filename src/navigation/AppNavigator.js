@@ -4,6 +4,9 @@ import { NavigationContainer } from '@react-navigation/native';
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
 // Imports das Telas e do Contexto
 import { AppContext } from '../context/AppContext';
+import UserHeader from '../components/UserHeader';
+// Aproveite e import o Platform também
+import { Platform } from 'react-native';
 import LoginScreen from '../views/LoginScreen';
 import StudentHome from '../views/StudentHome';
 import AdminHome from '../views/AdminHome';
@@ -49,18 +52,45 @@ options={{ headerShown: false }}
 // CENÁRIO B: Usuário existe E é Admin
 // Redireciona para o Painel Administrativo
 <Stack.Screen
-name='AdminHome'
-component={AdminHome}
-options={{ title: 'Painel do ADM' }}
+  name='AdminHome'
+  component={AdminHome}
+  options={{
+    title: 'Painel Admin',
+    headerTitleAlign: 'left',
+    headerTitleStyle: {
+      fontSize: 20,
+      fontWeight: 'bold',
+      color: '#B71C1C',
+    },
+    headerRight: () => <UserHeader />,
+    headerStyle: {
+      height: Platform.OS === 'web' ? 90 : 100,
+    },
+    headerShadowVisible: true,
+  }}
 />
 ) : (
 // CENÁRIO C: Usuário existe (e não é admin, logo é Aluno)
 // Redireciona para a Carteirinha Digital
 <Stack.Screen
-name='StudentHome'
-component={StudentHome}
-options={{ title: 'Ticket Digital' }}
+  name='StudentHome'
+  component={StudentHome}
+  options={{
+    title: 'Ticket Digital',
+    headerTitleAlign: 'left',
+    headerTitleStyle: {
+      fontSize: 20,
+      fontWeight: 'bold',
+      color: '#004D40',
+    },
+    headerRight: () => <UserHeader />,
+    headerStyle: {
+      height: Platform.OS === 'web' ? 90 : 100,
+    },
+    headerShadowVisible: true,
+  }}
 />
+
 )}
 </Stack.Navigator>
 </NavigationContainer>
